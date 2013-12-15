@@ -19,7 +19,7 @@ module.exports = function(grunt) {
             }
         },
         jshint: {
-            allFiles: ['gruntfile.js', 'cloudinit.js', 'lib/**/*.js', 'routes/**/*.js'],
+            allFiles: ['gruntfile.js', 'lib/**/*.js', 'services/**/*.js'],
             options: {
                 jshintrc: '.jshintrc'
             }
