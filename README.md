@@ -1,6 +1,6 @@
 # git-issue
 
-[![build status](https://secure.travis-ci.org/gittallk/git-hook.png)](http://travis-ci.org/gittallk/git-hook)
+[![build status](https://secure.travis-ci.org/gittalk/git-hook.png)](http://travis-ci.org/gittalk/git-hook)
 
 Why? This nodejs module implements expressjs routes to react on github, bitbucket and gitlab push hooks. The events are parsed, translated into a common format and emitted to your javascript implementation.
 
