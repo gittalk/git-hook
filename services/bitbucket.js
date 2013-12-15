@@ -1,5 +1,7 @@
 'use strict';
 
+var url = require('url');
+
 /*
  * verify the sender of the hook
  */
@@ -32,11 +34,17 @@ function extract(data, callback) {
 
     var eventData = {
         'type': 'push',
+        'user': {
+            'name': data.user
+        },
         'repo': {
             'name': data.repository.name,
             'owner': data.repository.owner
         },
+        'before':data.before,
+        'after':data.after,
         'commits': commits,
+        'compare': url.resolve(data.canon_url, data.repository.absolute_url),
         'raw': data
     };
 

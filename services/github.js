@@ -44,12 +44,20 @@ function extract(data, callback) {
 
     var eventData = {
         'type': 'push',
+        'user': {
+            'email': data.pusher.email,
+            'name': data.pusher.name
+        },
         'repo': {
             'name': data.repository.name,
             'owner': data.repository.owner.name,
             'url': data.repository.url
         },
+        'before':data.before,
+        'after':data.after,
+        'ref': data.rev,
         'commits': commits,
+        'compare': data.compare,
         'raw': data
     };
 

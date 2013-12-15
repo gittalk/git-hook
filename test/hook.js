@@ -47,6 +47,9 @@ describe('hooks', function () {
 
         var response = {
             "type": "push",
+            "user": {
+                "name": "marcus"
+            },
             "repo": {
                 "name": "Project X",
                 "owner": "marcus"
@@ -59,14 +62,16 @@ describe('hooks', function () {
                 "message": "Added some more things to somefile.py\n",
                 "timestamp": "2012-05-30 05:58:56",
                 "url": ""
-            }]
-        }
+            }],
+            "compare": "https://bitbucket.org/marcus/project-x/"
+        };
 
         githook.on('push', function (eventdata) {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
             assert.equal(JSON.stringify(response), JSON.stringify(eventdata));
+            // console.log(JSON.stringify(eventdata));
             done();
         });
 
@@ -85,6 +90,9 @@ describe('hooks', function () {
     it('bitbucket mercurial', function (done) {
         var response = {
             "type": "push",
+            "user": {
+                "name": "marcus"
+            },
             "repo": {
                 "name": "Project X",
                 "owner": "marcus"
@@ -97,7 +105,8 @@ describe('hooks', function () {
                 "message": "Added some featureA things",
                 "timestamp": "2012-05-30 06:07:03",
                 "url": ""
-            }]
+            }],
+            "compare": "https://bitbucket.org/marcus/project-x/"
         };
 
         githook.on('push', function (eventdata) {
@@ -105,6 +114,7 @@ describe('hooks', function () {
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
             assert.equal(JSON.stringify(response), JSON.stringify(eventdata));
+            // console.log(JSON.stringify(eventdata));
             done();
         });
 
@@ -122,11 +132,17 @@ describe('hooks', function () {
     it('github', function (done) {
         var response = {
             "type": "push",
+            "user": {
+                "email": "lolwut@noway.biz",
+                "name": "Garen Torikian"
+            },
             "repo": {
                 "name": "testing",
                 "owner": "octokitty",
                 "url": "https://github.com/octokitty/testing"
             },
+            "before": "17c497ccc7cca9c2f735aa07e9e3813060ce9a6a",
+            "after": "1481a2de7b2a7d02428ad93446ab166be7793fbb",
             "commits": [{
                 "author": {
                     "email": "lolwut@noway.biz",
@@ -154,7 +170,8 @@ describe('hooks', function () {
                 "message": "Rename madame-bovary.txt to words/madame-bovary.txt",
                 "timestamp": "2013-03-12T08:14:29-07:00",
                 "url": "https://github.com/octokitty/testing/commit/1481a2de7b2a7d02428ad93446ab166be7793fbb"
-            }]
+            }],
+            "compare": "https://github.com/octokitty/testing/compare/17c497ccc7cc...1481a2de7b2a"
         };
 
         githook.on('push', function (eventdata) {
@@ -162,6 +179,7 @@ describe('hooks', function () {
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
             assert.equal(JSON.stringify(response), JSON.stringify(eventdata));
+            // console.log(JSON.stringify(eventdata));
             done();
         });
 
@@ -179,10 +197,15 @@ describe('hooks', function () {
     it('gitlab 6', function (done) {
         var response = {
             "type": "push",
+            "user": {
+                "name": "John Smith"
+            },
             "repo": {
                 "name": "Diaspora",
                 "owner": ""
             },
+            "before": "95790bf891e76fee5e1747ab589903a6a1f80f22",
+            "after": "da1560886d4f094c3e6c9ef40349f7d38b5d27d7",
             "commits": [{
                 "author": {
                     "email": "jordi@softcatala.org",
@@ -201,7 +224,8 @@ describe('hooks', function () {
                 "message": "fixed readme",
                 "timestamp": "2012-01-03T23:36:29+02:00",
                 "url": "http://localhost/diaspora/commits/da1560886d4f094c3e6c9ef40349f7d38b5d27d7"
-            }]
+            }],
+            "compare": "http://localhost/diaspora/compare/95790bf891e76fee5e1747ab589903a6a1f80f22...da1560886d4f094c3e6c9ef40349f7d38b5d27d7"
         };
 
         githook.on('push', function (eventdata) {
@@ -209,6 +233,7 @@ describe('hooks', function () {
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
             assert.equal(JSON.stringify(response), JSON.stringify(eventdata));
+            // console.log(JSON.stringify(eventdata));
             done();
         });
 

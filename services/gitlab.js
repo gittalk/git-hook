@@ -32,11 +32,18 @@ function extract(data, callback) {
 
     var eventData = {
         'type': 'push',
+        'user': {
+            'name': data.user_name
+        },
         'repo': {
             'name': data.repository.name,
             'owner': ''
         },
+        'before':data.before,
+        'after':data.after,
+        'ref': data.rev,
         'commits': commits,
+        'compare': data.repository.homepage + '/compare/' + data.before + '...' + data.after,
         'raw': '{raw event}'
     };
 
