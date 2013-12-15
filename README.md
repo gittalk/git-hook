@@ -1,10 +1,35 @@
-# git-issue
+|# git-issue
 
 [![build status](https://secure.travis-ci.org/gittalk/git-hook.png)](http://travis-ci.org/gittalk/git-hook)
 
 Why? This nodejs module implements expressjs routes to react on github, bitbucket and gitlab push hooks. The events are parsed, translated into a common format and emitted to your javascript implementation.
 
 Under development
+
+# Supported event types
+
+✔ supported, ∅ not supported by this service, ✘ not supported by git-hook (yet)
+
+| Event Type    | Github     | Bitbucket | Gitlab    | Description |
+| ------------- | ---------- | --------- | --------- | ----------- |
+|push | ✔ | ✔ | ✔  | Any git push to a Repository. This is the default event. |
+|issues | ✘ | ∅ | ∅ | Any time an Issue is opened or closed. |
+|issue_comment | ✘ | ∅ | ∅ | Any time an Issue is commented on. |
+|commit_comment | ✘ | ∅ | ∅ | Any time a Commit is commented on. |
+|create  | ✘ | ∅ | ∅ | Any time a Repository, Branch, or Tag is created. |
+|delete  | ✘ | ∅ | ∅ | Any time a Branch or Tag is deleted. |
+|pull_request  | ✘ | ✘ | ∅ | Any time a Pull Request is opened, closed, or synchronized (updated due to a new push in the branch that the pull request is tracking). |
+|pull_request_review_comment  | ✘ | ✘ | ∅ | Any time a Commit is commented on while inside a Pull Request review (the Files Changed tab). |
+|gollum  | ✘ | ∅ | ∅ |  Any time a Wiki page is updated. |
+|watch  | ✘ | ∅ | ∅ |  Any time a User watches the Repository. |
+|release  | ✘ | ∅ | ∅ |  Any time a Release is published in the Repository. |
+|fork  | ✘ | ∅ | ∅ |  Any time a Repository is forked. |
+|member  | ✘ | ∅ | ∅ |  Any time a User is added as a collaborator to a non-Organization Repository. |
+|public | ✘ | ∅ | ∅ |   Any time a Repository changes from private to public. |
+|team_add  | ✘ | ∅ | ∅ | Any time a team is added or modified on a Repository. |
+|status | ✘ | ∅ | ∅ | Any time a Repository has a status update from the API |
+
+More information is available at [Github](http://developer.github.com/v3/repos/hooks/), [Bitbucket Pull Request POST hook ](https://confluence.atlassian.com/display/BITBUCKET/Pull+Request+POST+hook+management), [POST hook management](https://confluence.atlassian.com/display/BITBUCKET/POST+hook+management), [Gitlab](http://api.gitlab.org/system_hooks.html)
 
 # Contributing
 
