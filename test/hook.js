@@ -54,6 +54,9 @@ describe('hooks', function () {
                 "name": "Project X",
                 "owner": "marcus"
             },
+            "before": "",
+            "after": "",
+            "ref": "",
             "commits": [{
                 "author": {
                     "email": "",
@@ -70,8 +73,8 @@ describe('hooks', function () {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
-            assert.equal(JSON.stringify(response), JSON.stringify(eventdata));
-            // console.log(JSON.stringify(eventdata));
+            assert.equal(JSON.stringify(eventdata), JSON.stringify(response));
+            //console.log(JSON.stringify(eventdata));
             done();
         });
 
@@ -97,6 +100,9 @@ describe('hooks', function () {
                 "name": "Project X",
                 "owner": "marcus"
             },
+            "before": "",
+            "after": "",
+            "ref": "",
             "commits": [{
                 "author": {
                     "email": "",
@@ -113,8 +119,8 @@ describe('hooks', function () {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
-            assert.equal(JSON.stringify(response), JSON.stringify(eventdata));
-            // console.log(JSON.stringify(eventdata));
+            assert.equal(JSON.stringify(eventdata), JSON.stringify(response));
+            //console.log(JSON.stringify(eventdata));
             done();
         });
 
@@ -143,6 +149,7 @@ describe('hooks', function () {
             },
             "before": "17c497ccc7cca9c2f735aa07e9e3813060ce9a6a",
             "after": "1481a2de7b2a7d02428ad93446ab166be7793fbb",
+            "ref": "refs/heads/master",
             "commits": [{
                 "author": {
                     "email": "lolwut@noway.biz",
@@ -178,8 +185,8 @@ describe('hooks', function () {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
-            assert.equal(JSON.stringify(response), JSON.stringify(eventdata));
-            // console.log(JSON.stringify(eventdata));
+            assert.equal(JSON.stringify(eventdata), JSON.stringify(response));
+            //console.log(JSON.stringify(eventdata));
             done();
         });
 
@@ -206,6 +213,7 @@ describe('hooks', function () {
             },
             "before": "95790bf891e76fee5e1747ab589903a6a1f80f22",
             "after": "da1560886d4f094c3e6c9ef40349f7d38b5d27d7",
+            "ref":"refs/heads/master",
             "commits": [{
                 "author": {
                     "email": "jordi@softcatala.org",
@@ -232,7 +240,7 @@ describe('hooks', function () {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
-            assert.equal(JSON.stringify(response), JSON.stringify(eventdata));
+            assert.equal(JSON.stringify(eventdata), JSON.stringify(response));
             // console.log(JSON.stringify(eventdata));
             done();
         });

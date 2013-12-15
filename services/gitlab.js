@@ -41,7 +41,7 @@ function extract(data, callback) {
         },
         'before':data.before,
         'after':data.after,
-        'ref': data.rev,
+        'ref': data.ref,
         'commits': commits,
         'compare': data.repository.homepage + '/compare/' + data.before + '...' + data.after,
         'raw': '{raw event}'

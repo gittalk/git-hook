@@ -41,8 +41,9 @@ function extract(data, callback) {
             'name': data.repository.name,
             'owner': data.repository.owner
         },
-        'before':data.before,
-        'after':data.after,
+        'before':'',
+        'after':'',
+        'ref': '',
         'commits': commits,
         'compare': url.resolve(data.canon_url, data.repository.absolute_url),
         'raw': data

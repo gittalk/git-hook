@@ -55,7 +55,7 @@ function extract(data, callback) {
         },
         'before':data.before,
         'after':data.after,
-        'ref': data.rev,
+        'ref': data.ref,
         'commits': commits,
         'compare': data.compare,
         'raw': data
