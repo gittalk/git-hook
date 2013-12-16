@@ -13,7 +13,7 @@ function verify(data, callback) {
 /* 
  * extract the data
  */
-function extract(data, callback) {
+function extract(header, data, callback) {
 
     // extract commit messages
     var commits = [];

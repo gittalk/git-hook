@@ -36,9 +36,9 @@ util.inherits(Githook, EventEmitter);
 Githook.prototype.initialize = function () {
     var self = this;
     this.app.post('/github', function (req, res) {
-        self.handleroute('github', req.body, function (err) {
+        self.handleroute('github', req.headers, req.body, function (err) {
             if (err) {
-                res.error(err);
+                res.send(400, 'Event not supported');
             } else {
                 res.end();
             }
@@ -46,9 +46,9 @@ Githook.prototype.initialize = function () {
     });
 
     this.app.post('/gitlab', function (req, res) {
-        self.handleroute('gitlab', req.body, function (err) {
+        self.handleroute('gitlab', req.headers, req.body, function (err) {
             if (err) {
-                res.error(err);
+                res.send(400, 'Event not supported');
             } else {
                 res.end();
             }
@@ -56,9 +56,9 @@ Githook.prototype.initialize = function () {
     });
 
     this.app.post('/bitbucket', function (req, res) {
-        self.handleroute('bitbucket', req.body, function (err) {
+        self.handleroute('bitbucket', req.headers, req.body, function (err) {
             if (err) {
-                res.error(err);
+                res.send(400, 'Event not supported');
             } else {
                 res.end();
             }
@@ -69,12 +69,14 @@ Githook.prototype.initialize = function () {
 /*
  * handle the POST request data and extract the required information
  */
-Githook.prototype.handleroute = function (service, rawEventData, callback) {
+Githook.prototype.handleroute = function (service, header, body, callback) {
     var self = this;
-    services[service].verify(rawEventData, function (err) {
+    services[service].verify(body, function (err) {
         if (!err) {
-            services[service].extract(rawEventData, function (err, json) {
-                self.eventhandler(json);
+            services[service].extract(header, body, function (err, json) {
+                if (!err) {
+                    self.eventhandler(json);
+                }
                 callback(err);
             });
         } else {
