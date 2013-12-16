@@ -32,7 +32,6 @@ describe('hooks', function () {
         return app;
     }
 
-
     beforeEach(function (done) {
         app = startServer();
         setTimeout(done, 1000);
@@ -135,7 +134,7 @@ describe('hooks', function () {
             });
     });
 
-    it('github', function (done) {
+    it('github push', function (done) {
         var response = {
             "type": "push",
             "user": {
@@ -190,10 +189,112 @@ describe('hooks', function () {
             done();
         });
 
-        var data = fs.readFileSync(path.resolve(__dirname, './hooks/github.json'));
+        var data = fs.readFileSync(path.resolve(__dirname, './hooks/github_push.json'));
         var json = JSON.parse(data);
         request(app)
             .post('/github')
+            .set('X-GitHub-Event', 'push')
+            .set('X-GitHub-Delivery', '12321')
+            .send(json)
+            .expect(200)
+            .end(function (err, res) {
+                should.not.exist(err);
+            });
+    });
+
+    it('github issues', function (done) {
+        var response = {'type' : 'issues'};
+
+        githook.on('issues', function (eventdata) {
+            delete eventdata.raw;
+            // this is not a secure test, because JSON does not garantie a specific order
+            // anyway it works for our tests 
+            assert.equal(JSON.stringify(eventdata), JSON.stringify(response));
+            //console.log(JSON.stringify(eventdata));
+            done();
+        });
+
+        var data = fs.readFileSync(path.resolve(__dirname, './hooks/github_issues.json'));
+        var json = JSON.parse(data);
+        request(app)
+            .post('/github')
+            .set('X-GitHub-Event', 'issues')
+            .set('X-GitHub-Delivery', '12321')
+            .send(json)
+            .expect(200)
+            .end(function (err, res) {
+                should.not.exist(err);
+            });
+    });
+
+    it('github pull_request', function (done) {
+        var response = {'type' : 'pull_request'};
+
+        githook.on('pull_request', function (eventdata) {
+            delete eventdata.raw;
+            // this is not a secure test, because JSON does not garantie a specific order
+            // anyway it works for our tests 
+            assert.equal(JSON.stringify(eventdata), JSON.stringify(response));
+            //console.log(JSON.stringify(eventdata));
+            done();
+        });
+
+        var data = fs.readFileSync(path.resolve(__dirname, './hooks/github_pull_request.json'));
+        var json = JSON.parse(data);
+        request(app)
+            .post('/github')
+            .set('X-GitHub-Event', 'pull_request')
+            .set('X-GitHub-Delivery', '12321')
+            .send(json)
+            .expect(200)
+            .end(function (err, res) {
+                should.not.exist(err);
+            });
+    });
+
+    it('github issue comment', function (done) {
+        var response = {'type' : 'issue_comment'};
+
+        githook.on('issue_comment', function (eventdata) {
+            delete eventdata.raw;
+            // this is not a secure test, because JSON does not garantie a specific order
+            // anyway it works for our tests 
+            assert.equal(JSON.stringify(eventdata), JSON.stringify(response));
+            //console.log(JSON.stringify(eventdata));
+            done();
+        });
+
+        var data = fs.readFileSync(path.resolve(__dirname, './hooks/github_issue_comment.json'));
+        var json = JSON.parse(data);
+        request(app)
+            .post('/github')
+            .set('X-GitHub-Event', 'issue_comment')
+            .set('X-GitHub-Delivery', '12321')
+            .send(json)
+            .expect(200)
+            .end(function (err, res) {
+                should.not.exist(err);
+            });
+    });
+
+    it('github fork', function (done) {
+        var response = {'type' : 'fork'};
+        
+        githook.on('fork', function (eventdata) {
+            delete eventdata.raw;
+            // this is not a secure test, because JSON does not garantie a specific order
+            // anyway it works for our tests 
+            assert.equal(JSON.stringify(eventdata), JSON.stringify(response));
+            //console.log(JSON.stringify(eventdata));
+            done();
+        });
+
+        var data = fs.readFileSync(path.resolve(__dirname, './hooks/github_fork.json'));
+        var json = JSON.parse(data);
+        request(app)
+            .post('/github')
+            .set('X-GitHub-Event', 'fork')
+            .set('X-GitHub-Delivery', '12321')
             .send(json)
             .expect(200)
             .end(function (err, res) {

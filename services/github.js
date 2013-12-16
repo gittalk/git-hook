@@ -24,7 +24,29 @@ function verify(data, callback) {
  * extract the data
  */
 function extract(header, data, callback) {
+    // extract event type
+    var ghevent = header['X-GitHub-Event'.toLowerCase()];
+    switch (ghevent) {
+    case 'push':
+        extractPushEvent(data, callback);
+        break;
+    case 'issues':
+    case 'issue_comment':
+    case 'pull_request':
+    case 'fork':
+        // for now we return an empty object
+        callback(null, {
+            'type': ghevent,
+            'raw': data
+        });
+        break;
+    default:
+        callback('event not supported');
+        break;
+    }
+}
 
+function extractPushEvent(data, callback)  {
     // extract commit messages
     var commits = [];
     for (var i = 0, l = data.commits.length; i < l; i++) {
@@ -36,8 +58,8 @@ function extract(header, data, callback) {
                 'username': dcommit.author.username
             },
             'message': dcommit.message,
-            'timestamp' : dcommit.timestamp,
-            'url' : dcommit.url
+            'timestamp': dcommit.timestamp,
+            'url': dcommit.url
         };
         commits.push(commit);
     }
@@ -53,8 +75,8 @@ function extract(header, data, callback) {
             'owner': data.repository.owner.name,
             'url': data.repository.url
         },
-        'before':data.before,
-        'after':data.after,
+        'before': data.before,
+        'after': data.after,
         'ref': data.ref,
         'commits': commits,
         'compare': data.compare,
