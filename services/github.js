@@ -20,32 +20,9 @@ function verify(data, callback) {
     callback(null);
 }
 
-/* 
- * extract the data
+/*
+ * extract data from pull request
  */
-function extract(header, data, callback) {
-    // extract event type
-    var ghevent = header['X-GitHub-Event'.toLowerCase()];
-    switch (ghevent) {
-    case 'push':
-        extractPushEvent(data, callback);
-        break;
-    case 'issues':
-    case 'issue_comment':
-    case 'pull_request':
-    case 'fork':
-        // for now we return an empty object
-        callback(null, {
-            'type': ghevent,
-            'raw': data
-        });
-        break;
-    default:
-        callback('event not supported');
-        break;
-    }
-}
-
 function extractPushEvent(data, callback)  {
     // extract commit messages
     var commits = [];
@@ -84,6 +61,32 @@ function extractPushEvent(data, callback)  {
     };
 
     callback(null, eventData);
+}
+
+/* 
+ * extract the data
+ */
+function extract(header, data, callback) {
+    // extract event type
+    var ghevent = header['X-GitHub-Event'.toLowerCase()];
+    switch (ghevent) {
+    case 'push':
+        extractPushEvent(data, callback);
+        break;
+    case 'issues':
+    case 'issue_comment':
+    case 'pull_request':
+    case 'fork':
+        // for now we return an empty object
+        callback(null, {
+            'type': ghevent,
+            'raw': data
+        });
+        break;
+    default:
+        callback('event not supported');
+        break;
+    }
 }
 
 module.exports = {
