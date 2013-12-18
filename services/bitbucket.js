@@ -64,7 +64,8 @@ function extract(header, data, callback) {
 
     switch (bbevent) {
     case 'push':
-        extractPushEvent(data.payload, callback);
+        var pushdata = JSON.parse(data.payload);
+        extractPushEvent(pushdata, callback);
         break;
     default:
         callback('event not supported');
