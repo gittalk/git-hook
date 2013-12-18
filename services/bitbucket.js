@@ -5,16 +5,14 @@ var url = require('url');
 /*
  * verify the sender of the hook
  */
+
 function verify(data, callback) {
     // verify sender: 131.103.20.165 and 131.103.20.166
     callback(null);
 }
 
-/* 
- * extract the data
- */
-function extract(header, data, callback) {
 
+function extractPushEvent(data, callback) {
     // extract commit messages
     var commits = [];
     for (var i = 0, l = data.commits.length; i < l; i++) {
@@ -26,8 +24,8 @@ function extract(header, data, callback) {
                 'username': ''
             },
             'message': dcommit.message,
-            'timestamp' : dcommit.timestamp,
-            'url' : ''
+            'timestamp': dcommit.timestamp,
+            'url': ''
         };
         commits.push(commit);
     }
@@ -41,8 +39,8 @@ function extract(header, data, callback) {
             'name': data.repository.name,
             'owner': data.repository.owner
         },
-        'before':'',
-        'after':'',
+        'before': '',
+        'after': '',
         'ref': '',
         'commits': commits,
         'compare': url.resolve(data.canon_url, data.repository.absolute_url),
@@ -50,6 +48,29 @@ function extract(header, data, callback) {
     };
 
     callback(null, eventData);
+}
+
+
+/* 
+ * extract the data
+ */
+
+function extract(header, data, callback) {
+    var bbevent;
+
+    if (data && data.payload) {
+        bbevent = 'push';
+    }
+
+    switch (bbevent) {
+    case 'push':
+        extractPushEvent(data.payload, callback);
+        break;
+    default:
+        callback('event not supported');
+        break;
+    }
+
 }
 
 module.exports = {
