@@ -6,6 +6,7 @@ var request = require('supertest'),
     assert = require('assert'),
     path = require('path'),
     express = require('express'),
+    bodyParser = require('body-parser'),
     Githook = require('../index.js');
 
 describe('hooks', function () {
@@ -15,10 +16,39 @@ describe('hooks', function () {
     function startServer() {
 
         app = express();
-        app.use(express.bodyParser());
-        app.use(express.methodOverride());
+        githook = new Githook();
 
-        githook = new Githook(app);
+        app.use(bodyParser.json({ limit: '1mb' }));
+        
+        app.post('/github', function (req, res) {
+            githook.handleroute('github', req.headers, req.body, function (err) {
+                if (err) {
+                    res.send(400, 'Event not supported');
+                } else {
+                    res.end();
+                }
+            });
+        });
+
+        app.post('/gitlab', function (req, res) {
+            githook.handleroute('gitlab', req.headers, req.body, function (err) {
+                if (err) {
+                    res.send(400, 'Event not supported');
+                } else {
+                    res.end();
+                }
+            });
+        });
+
+        app.post('/bitbucket', function (req, res) {
+            githook.handleroute('bitbucket', req.headers, req.body, function (err) {
+                if (err) {
+                    res.send(400, 'Event not supported');
+                } else {
+                    res.end();
+                }
+            });
+        });
 
         // error handler
         app.use(function (err, req, res, next) {
