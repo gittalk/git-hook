@@ -1,6 +1,7 @@
 'use strict';
 
 var util = require('util'),
+    debug = require('debug')('githook'),
     EventEmitter = require('events').EventEmitter,
     services = require('./services');
 
@@ -22,54 +23,16 @@ var util = require('util'),
  *     "raw" : "{raw event}"
  * }
  */
-function Githook(app) {
+function Githook() {
     EventEmitter.call(this);
-    this.app = app;
-    this.initialize();
 }
 util.inherits(Githook, EventEmitter);
-
-/** 
- * initialize the express app variable with the routes to handle web hook
- * events
- */
-Githook.prototype.initialize = function () {
-    var self = this;
-    this.app.post('/github', function (req, res) {
-        self.handleroute('github', req.headers, req.body, function (err) {
-            if (err) {
-                res.send(400, 'Event not supported');
-            } else {
-                res.end();
-            }
-        });
-    });
-
-    this.app.post('/gitlab', function (req, res) {
-        self.handleroute('gitlab', req.headers, req.body, function (err) {
-            if (err) {
-                res.send(400, 'Event not supported');
-            } else {
-                res.end();
-            }
-        });
-    });
-
-    this.app.post('/bitbucket', function (req, res) {
-        self.handleroute('bitbucket', req.headers, req.body, function (err) {
-            if (err) {
-                res.send(400, 'Event not supported');
-            } else {
-                res.end();
-            }
-        });
-    });
-};
 
 /*
  * handle the POST request data and extract the required information
  */
 Githook.prototype.handleroute = function (service, header, body, callback) {
+    debug('handle ' + service)
     var self = this;
     services[service].verify(body, function (err) {
         if (!err) {
