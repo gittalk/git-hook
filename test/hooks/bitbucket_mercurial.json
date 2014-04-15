@@ -1,37 +1,3 @@
 {
-    "canon_url": "https://bitbucket.org",
-    "commits": [
-        {
-            "author": "marcus",
-            "branch": "featureA",
-            "files": [
-                {
-                    "file": "somefile.py",
-                    "type": "modified"
-                }
-            ],
-            "message": "Added some featureA things",
-            "node": "d14d26a93fd2",
-            "parents": [
-                "1b458191f31a"
-            ],
-            "raw_author": "Marcus Bertrand <marcus@somedomain.com>",
-            "raw_node": "d14d26a93fd28d3166fa81c0cd3b6f339bb95bfe",
-            "revision": 3,
-            "size": -1,
-            "timestamp": "2012-05-30 06:07:03",
-            "utctimestamp": "2012-05-30 04:07:03+00:00"
-        }
-    ],
-    "repository": {
-        "absolute_url": "/marcus/project-x/",
-        "fork": false,
-        "is_private": true,
-        "name": "Project X",
-        "owner": "marcus",
-        "scm": "hg",
-        "slug": "project-x",
-        "website": ""
-    },
-    "user": "marcus"
+    "payload" : "{\"canon_url\":\"https://bitbucket.org\",\"commits\":[{\"author\":\"marcus\",\"branch\":\"featureA\",\"files\":[{\"file\":\"somefile.py\",\"type\":\"modified\"}],\"message\":\"Added some featureA things\",\"node\":\"d14d26a93fd2\",\"parents\":[\"1b458191f31a\"],\"raw_author\":\"Marcus Bertrand <marcus@somedomain.com>\",\"raw_node\":\"d14d26a93fd28d3166fa81c0cd3b6f339bb95bfe\",\"revision\":3,\"size\":-1,\"timestamp\":\"2012-05-30 06:07:03\",\"utctimestamp\":\"2012-05-30 04:07:03+00:00\"}],\"repository\":{\"absolute_url\":\"/marcus/project-x/\",\"fork\":false,\"is_private\":true,\"name\":\"Project X\",\"owner\":\"marcus\",\"scm\":\"hg\",\"slug\":\"project-x\",\"website\":\"\"},\"user\":\"marcus\"}"
 }
