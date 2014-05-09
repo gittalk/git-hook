@@ -258,12 +258,13 @@ describe('hooks', function () {
     });
 
     it('github pull_request', function (done) {
-        var response = {'type' : 'pull_request'};
+        var response = {"type":"pull_request","user":{"username":"octocat","email":null,"name":null},"repo":{"name":"Hello-World","owner":"octocat","url":"https://api.github.com/repos/octocat/Hello-World","clone":"https://github.com/octocat/Hello-World.git"},"ref":"new-topic","commits":3};
 
         githook.on('pull_request', function (eventdata) {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
+
             assert.equal(JSON.stringify(eventdata), JSON.stringify(response));
             //console.log(JSON.stringify(eventdata));
             done();
