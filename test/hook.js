@@ -18,8 +18,10 @@ describe('hooks', function () {
         app = express();
         githook = new Githook();
 
-        app.use(bodyParser.json({ limit: '1mb' }));
-        
+        app.use(bodyParser.json({
+            limit: '1mb'
+        }));
+
         app.post('/github', function (req, res) {
             githook.handleroute('github', req.headers, req.body, function (err) {
                 if (err) {
@@ -233,7 +235,9 @@ describe('hooks', function () {
     });
 
     it('github issues', function (done) {
-        var response = {'type' : 'issues'};
+        var response = {
+            'type': 'issues'
+        };
 
         githook.on('issues', function (eventdata) {
             delete eventdata.raw;
@@ -300,7 +304,9 @@ describe('hooks', function () {
     });
 
     it('github issue comment', function (done) {
-        var response = {'type' : 'issue_comment'};
+        var response = {
+            'type': 'issue_comment'
+        };
 
         githook.on('issue_comment', function (eventdata) {
             delete eventdata.raw;
@@ -325,8 +331,10 @@ describe('hooks', function () {
     });
 
     it('github fork', function (done) {
-        var response = {'type' : 'fork'};
-        
+        var response = {
+            'type': 'fork'
+        };
+
         githook.on('fork', function (eventdata) {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
@@ -361,7 +369,7 @@ describe('hooks', function () {
             },
             "before": "95790bf891e76fee5e1747ab589903a6a1f80f22",
             "after": "da1560886d4f094c3e6c9ef40349f7d38b5d27d7",
-            "ref":"refs/heads/master",
+            "ref": "refs/heads/master",
             "commits": [{
                 "author": {
                     "email": "jordi@softcatala.org",
