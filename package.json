@@ -1,5 +1,6 @@
 {
   "name": "git-hook",
+  "description" : "abstracts git hooks for github, bitbucket and gitlab",
   "version": "0.1.1",
   "author": {
     "name": "Christoph Hartmann",
