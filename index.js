@@ -29,10 +29,10 @@ function Githook() {
 util.inherits(Githook, EventEmitter);
 
 /*
- * handle the POST request data and extract the required information
+ * handle the data of the a git event
  */
-Githook.prototype.handleroute = function (service, header, body, callback) {
-    debug('handle ' + service)
+Githook.prototype.handleEvent = function (service, data, callback) {
+    debug('handle ' + service);
     var self = this;
     services[service].verify(body, function (err) {
         if (!err) {
@@ -48,10 +48,23 @@ Githook.prototype.handleroute = function (service, header, body, callback) {
     });
 };
 
+/**
+ * determine the ip adress of the http requestor
+ */
+Githook.prototype.determineIP = function (req) {
+    // it does not use req.headers['x-forwarded-for']
+    // because this can be malipulated
+    var ip = req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress;
+    return ip;
+};
+
 /** 
  * emits the git event
  */
-Githook.prototype.eventhandler = function (eventData) {
+Githook.prototype.sendevent = function (eventData) {
+    debug('emit event: ' + JSON.stringify(eventData));
     this.emit(eventData.type, eventData);
 };
 
