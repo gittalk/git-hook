@@ -277,7 +277,8 @@ describe('hooks', function () {
             },
             "ref": "new-topic",
             "commits": 3,
-            "url": "https://api.github.com/repos/octocat/Hello-World/pulls/1"
+            "url": "https://api.github.com/repos/octocat/Hello-World/pulls/1",
+            "html_url": "https://github.com/octocat/Hello-World/pull/1",
         };
 
         githook.on('pull_request', function (eventdata) {
