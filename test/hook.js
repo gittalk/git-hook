@@ -258,7 +258,23 @@ describe('hooks', function () {
     });
 
     it('github pull_request', function (done) {
-        var response = {"type":"pull_request","user":{"username":"octocat","email":null,"name":null},"repo":{"name":"Hello-World","owner":"octocat","url":"https://api.github.com/repos/octocat/Hello-World","clone":"https://github.com/octocat/Hello-World.git"},"ref":"new-topic","commits":3};
+        var response = {
+            "type": "pull_request",
+            "user": {
+                "username": "octocat",
+                "email": null,
+                "name": null
+            },
+            "repo": {
+                "name": "Hello-World",
+                "owner": "octocat",
+                "url": "https://api.github.com/repos/octocat/Hello-World",
+                "clone": "https://github.com/octocat/Hello-World.git"
+            },
+            "ref": "new-topic",
+            "commits": 3,
+            "url": "https://api.github.com/repos/octocat/Hello-World/pulls/1"
+        };
 
         githook.on('pull_request', function (eventdata) {
             delete eventdata.raw;

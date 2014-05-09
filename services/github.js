@@ -80,6 +80,7 @@ function extractPullRequestEvent (data, callback) {
         },
         'ref': data.pull_request.head.ref,
         'commits': data.pull_request.commits,
+        'url' : data.pull_request.url,
         'raw': data
     };
 
