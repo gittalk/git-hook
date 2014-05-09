@@ -8,6 +8,8 @@ var express = require('express'),
 var app = express();
 var gh = new Githook();
 
+app.use(bodyParser.json({ limit: '1mb' }));
+
 app.get('/', function(req, res){
     res.send('hello world');
 });
@@ -44,7 +46,5 @@ app.post('/bitbucket', function (req, res) {
         }
     });
 });
-
-app.use(bodyParser.json({ limit: '1mb' }));
 
 app.listen(3001);
