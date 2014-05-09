@@ -34,17 +34,17 @@ util.inherits(Githook, EventEmitter);
 Githook.prototype.handleEvent = function (service, data, callback) {
     debug('handle ' + service);
     var self = this;
-    services[service].verify(body, function (err) {
-        if (!err) {
-            services[service].extract(header, body, function (err, json) {
-                if (!err) {
-                    self.eventhandler(json);
-                }
-                callback(err);
-            });
-        } else {
-            callback(err);
-        }
+    services[service].verify(data).then(function () {
+        debug('request is verified');
+        return services[service].extract(data.headers, data.body);
+    })
+    .then(function (json) {
+        self.sendevent(json);
+
+    }).
+    catch (function (err) {
+        var error = err ||  'An error occured';
+        callback(error);
     });
 };
 
