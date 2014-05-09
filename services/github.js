@@ -63,6 +63,29 @@ function extractPushEvent(data, callback)  {
     callback(null, eventData);
 }
 
+function extractPullRequestEvent (data, callback) {
+
+    var eventData = {
+        'type': 'pull_request',
+        'user': {
+            'username' : data.pull_request.head.user.login,
+            'email': null,
+            'name': null
+        },
+        'repo': {
+            'name': data.pull_request.head.repo.name,
+            'owner': data.pull_request.head.repo.owner.login,
+            'url': data.pull_request.head.repo.url,
+            'clone' : data.pull_request.head.repo.clone_url
+        },
+        'ref': data.pull_request.head.ref,
+        'commits': data.pull_request.commits,
+        'raw': data
+    };
+
+    callback(null, eventData);
+}
+
 /* 
  * extract the data
  */
@@ -73,9 +96,11 @@ function extract(header, data, callback) {
     case 'push':
         extractPushEvent(data, callback);
         break;
+    case 'pull_request':
+        extractPullRequestEvent(data, callback);
+        break;
     case 'issues':
     case 'issue_comment':
-    case 'pull_request':
     case 'fork':
         // for now we return an empty object
         callback(null, {
