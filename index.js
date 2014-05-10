@@ -3,7 +3,9 @@
 var util = require('util'),
     debug = require('debug')('githook'),
     EventEmitter = require('events').EventEmitter,
-    services = require('./services');
+    Github = require('./services/github'),
+    Bitbucket = require('./services/bitbucket'),
+    Gitlab = require('./services/gitlab');
 
 /**
  * With Githook we react on github, bitbucket and gitlab hooks and submit
@@ -23,7 +25,15 @@ var util = require('util'),
  *     "raw" : "{raw event}"
  * }
  */
-function Githook() {
+function Githook(options) {
+    this.options = options || {};
+    
+    // load service modules
+    this.services = {};
+    this.services.github = new Github(this.options.github);
+    this.services.bitbucket = new Bitbucket(this.options.bitbucket);
+    this.services.gitlab = new Gitlab(this.options.gitlab);
+
     EventEmitter.call(this);
 }
 util.inherits(Githook, EventEmitter);
@@ -34,15 +44,18 @@ util.inherits(Githook, EventEmitter);
 Githook.prototype.handleEvent = function (service, data, callback) {
     debug('handle ' + service);
     var self = this;
-    services[service].verify(data).then(function () {
+    this.services[service].verify(data).then(function () {
         debug('request is verified');
-        return services[service].extract(data.headers, data.body);
+        return self.services[service].extract(data.headers, data.body);
     })
     .then(function (json) {
         self.sendevent(json);
 
     }).
     catch (function (err) {
+        if (err) {
+            console.log(err);
+        }
         var error = err ||  'An error occured';
         callback(error);
     });

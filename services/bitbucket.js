@@ -88,4 +88,4 @@ Bitbucket.prototype.extract = function (header, data) {
 
 };
 
-module.exports = new Bitbucket();
+module.exports = Bitbucket;

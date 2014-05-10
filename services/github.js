@@ -183,4 +183,4 @@ Github.prototype.extract = function (header, data) {
     return promise;
 };
 
-module.exports = new Github();
+module.exports = Github;

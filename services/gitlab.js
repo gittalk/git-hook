@@ -62,4 +62,4 @@ Gitlab.prototype.extract = function (header, data) {
 
 };
 
-module.exports = new Gitlab();
+module.exports = Gitlab;
