@@ -4,7 +4,9 @@ var debug = require('debug')('githook:github'),
     Promise = require('bluebird'),
     Netmask = require('netmask').Netmask;
 
-var Github = function () {};
+var Github = function (options) {
+    this.options = options || {};
+};
 
 /*
  * verify the origin of the hook
@@ -21,16 +23,19 @@ var Github = function () {};
  *   }
  */
 Github.prototype.checkOrigin = function (ip) {
-
+    var self = this;
     return new Promise(function (resolve, reject) {
 
         var request = require('superagent');
 
         // download current list from https://api.github.com/meta
-        request
-            .get('https://api.github.com/meta')
-            .set('Accept', 'application/json')
-            .end(function (res) {
+        var req = request.get('https://api.github.com/meta');
+
+        req.set('Accept', 'application/json');
+        if (self.options.token) {
+            req.set('Authorization', 'token ' + self.options.token);
+        }
+        req.end(function (res) {
                 if (res.error) {
                     reject(res.error.message);
                 } else {
@@ -60,16 +65,9 @@ Github.prototype.checkOrigin = function (ip) {
     });
 };
 
-Github.prototype.checkSignature = function () {
-    return new Promise(function (resolve) {
-        debug('signature check successful');
-        resolve();
-    });
-};
-
 Github.prototype.verify = function (data) {
     debug('verify github hook');
-    return Promise.all([this.checkOrigin(data.ip), this.checkSignature()]);
+    return Promise.all([this.checkOrigin(data.ip)]);
 };
 
 /*
