@@ -23,7 +23,11 @@ describe('hooks', function () {
         }));
 
         app.post('/github', function (req, res) {
-            githook.handleroute('github', req.headers, req.body, function (err) {
+            githook.handleEvent('github', {
+                ip: '192.30.252.1',
+                headers: req.headers,
+                body: req.body
+            }, function (err) {
                 if (err) {
                     res.send(400, 'Event not supported');
                 } else {
@@ -33,7 +37,10 @@ describe('hooks', function () {
         });
 
         app.post('/gitlab', function (req, res) {
-            githook.handleroute('gitlab', req.headers, req.body, function (err) {
+            githook.handleEvent('gitlab', {
+                headers: req.headers,
+                body: req.body
+            }, function (err) {
                 if (err) {
                     res.send(400, 'Event not supported');
                 } else {
@@ -43,7 +50,10 @@ describe('hooks', function () {
         });
 
         app.post('/bitbucket', function (req, res) {
-            githook.handleroute('bitbucket', req.headers, req.body, function (err) {
+            githook.handleEvent('bitbucket', {
+                headers: req.headers,
+                body: req.body
+            }, function (err) {
                 if (err) {
                     res.send(400, 'Event not supported');
                 } else {

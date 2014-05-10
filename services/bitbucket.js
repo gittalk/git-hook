@@ -1,80 +1,91 @@
 'use strict';
 
-var url = require('url');
+var debug = require('debug')('githook:bitbucket'),
+    url = require('url'),
+    Promise = require('bluebird');
+
+var Bitbucket = function () {};
 
 /*
  * verify the sender of the hook
  */
-
-function verify(data, callback) {
+Bitbucket.prototype.verify = function (data) {
     // verify sender: 131.103.20.165 and 131.103.20.166
-    callback(null);
-}
+    debug('verify bitbucket hook: ' + JSON.stringify(data));
+    return new Promise(function (resolve) {
+        resolve();
+    });
+};
 
+Bitbucket.prototype.extractPushEvent = function (data) {
 
-function extractPushEvent(data, callback) {
-    // extract commit messages
-    var commits = [];
-    for (var i = 0, l = data.commits.length; i < l; i++) {
-        var dcommit = data.commits[i];
-        var commit = {
-            'author': {
-                'email': '',
-                'name': dcommit.author.name,
-                'username': ''
+    return new Promise(function (resolve) {
+        // extract commit messages
+        var commits = [];
+        for (var i = 0, l = data.commits.length; i < l; i++) {
+            var dcommit = data.commits[i];
+            var commit = {
+                'author': {
+                    'email': '',
+                    'name': dcommit.author.name,
+                    'username': ''
+                },
+                'message': dcommit.message,
+                'timestamp': dcommit.timestamp,
+                'url': ''
+            };
+            commits.push(commit);
+        }
+
+        var eventData = {
+            'type': 'push',
+            'user': {
+                'name': data.user
             },
-            'message': dcommit.message,
-            'timestamp': dcommit.timestamp,
-            'url': ''
+            'repo': {
+                'name': data.repository.name,
+                'owner': data.repository.owner
+            },
+            'before': '',
+            'after': '',
+            'ref': '',
+            'commits': commits,
+            'compare': url.resolve(data.canon_url, data.repository.absolute_url),
+            'raw': data
         };
-        commits.push(commit);
-    }
 
-    var eventData = {
-        'type': 'push',
-        'user': {
-            'name': data.user
-        },
-        'repo': {
-            'name': data.repository.name,
-            'owner': data.repository.owner
-        },
-        'before': '',
-        'after': '',
-        'ref': '',
-        'commits': commits,
-        'compare': url.resolve(data.canon_url, data.repository.absolute_url),
-        'raw': data
-    };
-
-    callback(null, eventData);
-}
+        resolve(eventData);
+    });
+};
 
 
 /* 
  * extract the data
  */
 
-function extract(header, data, callback) {
+Bitbucket.prototype.extract = function (header, data) {
     var bbevent;
 
     if (data && data.payload) {
         bbevent = 'push';
     }
 
+    var promise = null;
+
     switch (bbevent) {
     case 'push':
         var pushdata = JSON.parse(data.payload);
-        extractPushEvent(pushdata, callback);
+        promise = this.extractPushEvent(pushdata);
         break;
     default:
-        callback('event not supported');
+        promise = new Promise(function (resolve, reject) {
+            reject('event not supported');
+        });
         break;
     }
 
-}
+    return promise;
 
-module.exports = {
-    'verify': verify,
-    'extract': extract
 };
+
+module.exports = Bitbucket;

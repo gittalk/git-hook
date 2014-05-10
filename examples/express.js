@@ -8,15 +8,21 @@ var express = require('express'),
 var app = express();
 var gh = new Githook();
 
-app.use(bodyParser.json({ limit: '1mb' }));
+app.use(bodyParser.json({
+    limit: '1mb'
+}));
 
-app.get('/', function(req, res){
+app.get('/', function (req, res) {
     res.send('hello world');
 });
 
 app.post('/github', function (req, res) {
     debug('github event');
-    gh.handleroute('github', req.headers, req.body, function (err) {
+    gh.handleEvent('github', {
+        ip: '192.30.252.1', // gh.determineIP(req),
+        headers: req.headers,
+        body: req.body
+    }, function (err) {
         if (err) {
             res.send(400, 'Event not supported');
         } else {
@@ -27,7 +33,11 @@ app.post('/github', function (req, res) {
 
 app.post('/gitlab', function (req, res) {
     debug('gitlab event');
-    gh.handleroute('gitlab', req.headers, req.body, function (err) {
+    gh.handleEvent('gitlab', {
+        ip: gh.determineIP(req),
+        headers: req.headers,
+        body: req.body
+    }, function (err) {
         if (err) {
             res.send(400, 'Event not supported');
         } else {
@@ -38,7 +48,11 @@ app.post('/gitlab', function (req, res) {
 
 app.post('/bitbucket', function (req, res) {
     debug('bitbucket event');
-    gh.handleroute('bitbucket', req.headers, req.body, function (err) {
+    gh.handleEvent('bitbucket', {
+        ip: gh.determineIP(req),
+        headers: req.headers,
+        body: req.body
+    }, function (err) {
         if (err) {
             res.send(400, 'Event not supported');
         } else {
@@ -48,3 +62,4 @@ app.post('/bitbucket', function (req, res) {
 });
 
 app.listen(3001);
+console.log('started server on port 3001');

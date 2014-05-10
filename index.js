@@ -3,7 +3,9 @@
 var util = require('util'),
     debug = require('debug')('githook'),
     EventEmitter = require('events').EventEmitter,
-    services = require('./services');
+    Github = require('./services/github'),
+    Bitbucket = require('./services/bitbucket'),
+    Gitlab = require('./services/gitlab');
 
 /**
  * With Githook we react on github, bitbucket and gitlab hooks and submit
@@ -23,35 +25,59 @@ var util = require('util'),
  *     "raw" : "{raw event}"
  * }
  */
-function Githook() {
+function Githook(options) {
+    this.options = options || {};
+    
+    // load service modules
+    this.services = {};
+    this.services.github = new Github(this.options.github);
+    this.services.bitbucket = new Bitbucket(this.options.bitbucket);
+    this.services.gitlab = new Gitlab(this.options.gitlab);
+
     EventEmitter.call(this);
 }
 util.inherits(Githook, EventEmitter);
 
 /*
- * handle the POST request data and extract the required information
+ * handle the data of the a git event
  */
-Githook.prototype.handleroute = function (service, header, body, callback) {
-    debug('handle ' + service)
+Githook.prototype.handleEvent = function (service, data, callback) {
+    debug('handle ' + service);
     var self = this;
-    services[service].verify(body, function (err) {
-        if (!err) {
-            services[service].extract(header, body, function (err, json) {
-                if (!err) {
-                    self.eventhandler(json);
-                }
-                callback(err);
-            });
-        } else {
-            callback(err);
+    this.services[service].verify(data).then(function () {
+        debug('request is verified');
+        return self.services[service].extract(data.headers, data.body);
+    })
+    .then(function (json) {
+        self.sendevent(json);
+
+    }).
+    catch (function (err) {
+        if (err) {
+            console.log(err);
         }
+        var error = err ||  'An error occured';
+        callback(error);
     });
+};
+
+/**
+ * determine the ip adress of the http requestor
+ */
+Githook.prototype.determineIP = function (req) {
+    // it does not use req.headers['x-forwarded-for']
+    // because this can be malipulated
+    var ip = req.connection.remoteAddress ||
+        req.socket.remoteAddress ||
+        req.connection.socket.remoteAddress;
+    return ip;
 };
 
 /** 
  * emits the git event
  */
-Githook.prototype.eventhandler = function (eventData) {
+Githook.prototype.sendevent = function (eventData) {
+    debug('emit event: ' + JSON.stringify(eventData));
     this.emit(eventData.type, eventData);
 };
 

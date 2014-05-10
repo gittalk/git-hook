@@ -31,6 +31,54 @@ Under development
 
 More information is available at [Github](http://developer.github.com/v3/repos/hooks/), [Bitbucket Pull Request POST hook ](https://confluence.atlassian.com/display/BITBUCKET/Pull+Request+POST+hook+management), [POST hook management](https://confluence.atlassian.com/display/BITBUCKET/POST+hook+management), [Gitlab](http://api.gitlab.org/system_hooks.html)
 
+# Usage
+
+```javascript
+
+// create githook instance
+var githook = new Githook({
+    github: {
+        secret: secret,
+        // token : 'yourgithubtoken'
+    }
+});
+
+// bind a route to githook, eg. express 4.0
+app.post('/github', function (req, res) {
+    debug('github event');
+    gh.handleEvent('github', {
+        ip: githook.determineIP(req),
+        headers: req.headers,
+        body: req.body
+    }, function (err) {
+        if (err) {
+            res.send(400, 'Event not supported');
+        } else {
+            res.end();
+        }
+    });
+});
+
+// wait for git events
+githook.on('push', function (eventdata) {
+    // do your magic here
+});
+
+```
+
+
+# Configuration
+
+Currently only the `github` service can be configured. 
+
+    github: {
+        // @see https://developer.github.com/v3/repos/hooks/#create-a-hook
+        secret: signaturesecret,
+        // @see https://developer.github.com/v3/oauth/
+        token : 'yourgithubtoken'
+    }
+
+
 # Contributing
 
 Any contributions are welcome!
