@@ -1,4 +1,4 @@
-# git-issue
+# git-hook
 
 [![build status](https://secure.travis-ci.org/gittalk/git-hook.png)](http://travis-ci.org/gittalk/git-hook)
 
