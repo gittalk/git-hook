@@ -50,7 +50,7 @@ Githook.prototype.handleEvent = function (service, data, callback) {
     })
     .then(function (json) {
         self.sendevent(json);
-
+        callback();
     }).
     catch (function (err) {
         if (err) {
