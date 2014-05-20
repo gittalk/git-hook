@@ -1,7 +1,7 @@
 {
   "name": "git-hook",
   "description": "abstracts git hooks for github, bitbucket and gitlab",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "author": {
     "name": "Christoph Hartmann",
     "email": "chris@lollyrock.com",
@@ -36,9 +36,9 @@
   },
   "dependencies": {
     "debug": "0.8.0",
-    "bluebird" : "1.2.2",
-    "superagent" : "0.18.0",
-    "netmask" : "1.0.4"
+    "bluebird": "1.2.2",
+    "superagent": "0.18.0",
+    "netmask": "1.0.4"
   },
   "devDependencies": {
     "express": "4.0.0",
