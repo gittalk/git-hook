@@ -116,6 +116,26 @@ Github.prototype.extractPushEvent = function (data)  {
     });
 };
 
+/* 
+ *   {
+ *       "zen": "Responsive is better than fast.",
+ *       "hook_id": 2285152
+ *   }
+ */
+Github.prototype.extractPingEvent = function (data) {
+    debug('extract github ping event');
+    return new Promise(function (resolve) {
+
+        var eventData = {
+            'type': 'ping',
+            'zen' : data.zen,
+            'raw': data
+        };
+        
+        resolve(eventData);
+    });
+};
+
 Github.prototype.extractPullRequestEvent = function (data) {
     debug('extract github pull event');
     return new Promise(function (resolve) {
@@ -154,6 +174,9 @@ Github.prototype.extract = function (header, data) {
 
     debug('extract github event: ' + ghevent);
     switch (ghevent) {
+    case 'ping':
+        promise = this.extractPingEvent(data);
+        break;
     case 'push':
         promise = this.extractPushEvent(data);
         break;

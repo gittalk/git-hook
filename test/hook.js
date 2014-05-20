@@ -368,6 +368,34 @@ describe('hooks', function () {
             });
     });
 
+    it('github ping', function (done) {
+        var response = {
+            'type': 'ping',
+            'zen' : 'Responsive is better than fast.'
+        };
+
+        githook.on('ping', function (eventdata) {
+            delete eventdata.raw;
+            // this is not a secure test, because JSON does not garantie a specific order
+            // anyway it works for our tests 
+            assert.equal(JSON.stringify(eventdata), JSON.stringify(response));
+            //console.log(JSON.stringify(eventdata));
+            done();
+        });
+
+        var data = fs.readFileSync(path.resolve(__dirname, './hooks/github_ping.json'));
+        var json = JSON.parse(data);
+        request(app)
+            .post('/github')
+            .set('X-GitHub-Event', 'ping')
+            .set('X-GitHub-Delivery', '12321')
+            .send(json)
+            .expect(200)
+            .end(function (err, res) {
+                should.not.exist(err);
+            });
+    });
+
     it('gitlab 6', function (done) {
         var response = {
             "type": "push",
