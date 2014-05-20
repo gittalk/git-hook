@@ -92,7 +92,7 @@ Any contributions are welcome!
 
 # License and Author
 
-Author: Christoph Hartmann <chris@lollyrock.com>
+Christoph Hartmann <chris@lollyrock.com>
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.
