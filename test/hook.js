@@ -281,14 +281,17 @@ describe('hooks', function () {
             },
             "repo": {
                 "name": "Hello-World",
+                "full_name": "octocat/Hello-World",
                 "owner": "octocat",
                 "url": "https://api.github.com/repos/octocat/Hello-World",
-                "clone": "https://github.com/octocat/Hello-World.git"
+                "git_url": "git://github.com/octocat/Hello-World.git",
+                "clone_url": "https://github.com/octocat/Hello-World.git"
             },
             "ref": "new-topic",
+            "sha": "6dcb09b5b57875f334f61aebed695e2e4193db5e",
             "commits": 3,
             "url": "https://api.github.com/repos/octocat/Hello-World/pulls/1",
-            "html_url": "https://github.com/octocat/Hello-World/pull/1",
+            "html_url": "https://github.com/octocat/Hello-World/pull/1"
         };
 
         githook.on('pull_request', function (eventdata) {
@@ -371,7 +374,7 @@ describe('hooks', function () {
     it('github ping', function (done) {
         var response = {
             'type': 'ping',
-            'zen' : 'Responsive is better than fast.'
+            'zen': 'Responsive is better than fast.'
         };
 
         githook.on('ping', function (eventdata) {

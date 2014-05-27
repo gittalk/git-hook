@@ -148,11 +148,14 @@ Github.prototype.extractPullRequestEvent = function (data) {
             },
             'repo': {
                 'name': data.pull_request.head.repo.name,
+                'full_name': data.pull_request.head.repo.full_name,
                 'owner': data.pull_request.head.repo.owner.login,
                 'url': data.pull_request.head.repo.url,
-                'clone': data.pull_request.head.repo.clone_url
+                'git_url' : data.pull_request.head.repo.git_url,
+                'clone_url': data.pull_request.head.repo.clone_url
             },
             'ref': data.pull_request.head.ref,
+            'sha': data.pull_request.head.sha,
             'commits': data.pull_request.commits,
             'url': data.pull_request.url,
             'html_url': data.pull_request.html_url,
