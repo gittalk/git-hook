@@ -156,6 +156,7 @@ Github.prototype.extractPullRequestEvent = function (data) {
             },
             'ref': data.pull_request.head.ref,
             'sha': data.pull_request.head.sha,
+            'message' : data.pull_request.body,
             'commits': data.pull_request.commits,
             'url': data.pull_request.url,
             'html_url': data.pull_request.html_url,
