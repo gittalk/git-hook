@@ -41,10 +41,10 @@
     "netmask": "~1.0.4"
   },
   "devDependencies": {
-    "express": "4.0.0",
+    "express": "~4.0.0",
     "body-parser": "git+https://github.com/chris-rock/body-parser.git",
-    "supertest": "~0.11.0",
-    "should": "~3.3.0",
+    "supertest": "~0.13.0",
+    "should": "~4.0.1",
     "grunt-contrib-jshint": "~0.10.0",
     "grunt-mocha-test": "~0.10.2"
   }
