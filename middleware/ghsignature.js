@@ -1,17 +1,17 @@
 'use strict';
 
-var crypto = require('crypto'),
-    debug = require('debug')('githook:ghsignature');
+var crypto = require('crypto');
+var debug = require('debug')('githook:ghsignature');
 
 /**
  * implements a express middleware to verify signatures of github events
  */
 exports = module.exports = {
     // express middleware
-    verify: verify,
+    verify,
     // helper methids
-    checkSignature: checkSignature,
-    calculateSignature: calculateSignature
+    checkSignature,
+    calculateSignature
 };
 
 /**

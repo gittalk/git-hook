@@ -1,8 +1,8 @@
 'use strict';
 
-var debug = require('debug')('githook:github'),
-    Promise = require('bluebird'),
-    Netmask = require('netmask').Netmask;
+var debug = require('debug')('githook:github');
+var Promise = require('bluebird');
+var Netmask = require('netmask').Netmask;
 
 var Github = function (options) {
     this.options = options || {};
@@ -24,7 +24,7 @@ var Github = function (options) {
  */
 Github.prototype.checkOrigin = function (ip) {
     var self = this;
-    return new Promise(function (resolve, reject) {
+    return new Promise((resolve, reject) => {
 
         var request = require('superagent');
 
@@ -35,7 +35,7 @@ Github.prototype.checkOrigin = function (ip) {
         if (self.options.token) {
             req.set('Authorization', 'token ' + self.options.token);
         }
-        req.end(function (res) {
+        req.end(res => {
                 if (res.error) {
                     reject(res.error.message);
                 } else {
@@ -46,7 +46,7 @@ Github.prototype.checkOrigin = function (ip) {
                     var contains = false;
 
                     // check if the ip is in github range
-                    hooks.forEach(function (iprange) {
+                    hooks.forEach(iprange => {
                         var block = new Netmask(iprange);
                         if (block.contains(ip)) {
                             contains = true;
@@ -73,9 +73,9 @@ Github.prototype.verify = function (data) {
 /*
  * extract data from pull request
  */
-Github.prototype.extractPushEvent = function (data)  {
+Github.prototype.extractPushEvent = data => {
     debug('extract github push event');
-    return new Promise(function (resolve) {
+    return new Promise(resolve => {
         // extract commit messages
         var commits = [];
         for (var i = 0, l = data.commits.length; i < l; i++) {
@@ -122,9 +122,9 @@ Github.prototype.extractPushEvent = function (data)  {
  *       "hook_id": 2285152
  *   }
  */
-Github.prototype.extractPingEvent = function (data) {
+Github.prototype.extractPingEvent = data => {
     debug('extract github ping event');
-    return new Promise(function (resolve) {
+    return new Promise(resolve => {
 
         var eventData = {
             'type': 'ping',
@@ -136,9 +136,9 @@ Github.prototype.extractPingEvent = function (data) {
     });
 };
 
-Github.prototype.extractPullRequestEvent = function (data) {
+Github.prototype.extractPullRequestEvent = data => {
     debug('extract github pull event');
-    return new Promise(function (resolve) {
+    return new Promise(resolve => {
         var eventData = {
             'type': 'pull_request',
             'user': {
@@ -191,7 +191,7 @@ Github.prototype.extract = function (header, data) {
     case 'issue_comment':
     case 'fork':
         // for now we return an empty object
-        promise = new Promise(function (resolve) {
+        promise = new Promise(resolve => {
             resolve({
                 'type': ghevent,
                 'raw': data
@@ -199,7 +199,7 @@ Github.prototype.extract = function (header, data) {
         });
         break;
     default:
-        promise = new Promise(function (resolve, reject) {
+        promise = new Promise((resolve, reject) => {
             reject('event not supported');
         });
         break;
