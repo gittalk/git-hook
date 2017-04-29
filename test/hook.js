@@ -1,15 +1,15 @@
 'use strict';
 
-var request = require('supertest'),
-    fs = require('fs'),
-    should = require('should'),
-    assert = require('assert'),
-    path = require('path'),
-    express = require('express'),
-    bodyParser = require('body-parser'),
-    Githook = require('../index.js');
+var request = require('supertest');
+var fs = require('fs');
+var should = require('should');
+var assert = require('assert');
+var path = require('path');
+var express = require('express');
+var bodyParser = require('body-parser');
+var Githook = require('../index.js');
 
-describe('hooks', function () {
+describe('hooks', () => {
     var app;
     var githook;
 
@@ -22,12 +22,12 @@ describe('hooks', function () {
             limit: '1mb'
         }));
 
-        app.post('/github', function (req, res) {
+        app.post('/github', (req, res) => {
             githook.handleEvent('github', {
                 ip: '192.30.252.1',
                 headers: req.headers,
                 body: req.body
-            }, function (err) {
+            }, err => {
                 if (err) {
                     res.send(400, 'Event not supported');
                 } else {
@@ -36,11 +36,11 @@ describe('hooks', function () {
             });
         });
 
-        app.post('/gitlab', function (req, res) {
+        app.post('/gitlab', (req, res) => {
             githook.handleEvent('gitlab', {
                 headers: req.headers,
                 body: req.body
-            }, function (err) {
+            }, err => {
                 if (err) {
                     res.send(400, 'Event not supported');
                 } else {
@@ -49,11 +49,11 @@ describe('hooks', function () {
             });
         });
 
-        app.post('/bitbucket', function (req, res) {
+        app.post('/bitbucket', (req, res) => {
             githook.handleEvent('bitbucket', {
                 headers: req.headers,
                 body: req.body
-            }, function (err) {
+            }, err => {
                 if (err) {
                     res.send(400, 'Event not supported');
                 } else {
@@ -63,7 +63,7 @@ describe('hooks', function () {
         });
 
         // error handler
-        app.use(function (err, req, res, next) {
+        app.use((err, req, res, next) => {
             console.log("ERROR handler", err);
             res.status(500);
             res.send({
@@ -74,17 +74,17 @@ describe('hooks', function () {
         return app;
     }
 
-    beforeEach(function (done) {
+    beforeEach(done => {
         app = startServer();
         setTimeout(done, 1000);
     });
 
-    afterEach(function (done) {
+    afterEach(done => {
         // nothing to do yet
         done();
     });
 
-    it('bitbucket git', function (done) {
+    it('bitbucket git', done => {
 
         var response = {
             "type": "push",
@@ -110,7 +110,7 @@ describe('hooks', function () {
             "compare": "https://bitbucket.org/marcus/project-x/"
         };
 
-        githook.on('push', function (eventdata) {
+        githook.on('push', eventdata => {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
@@ -126,12 +126,12 @@ describe('hooks', function () {
             .send(json)
             .set('Accept', 'application/json')
             .expect(200)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
             });
     });
 
-    it('bitbucket mercurial', function (done) {
+    it('bitbucket mercurial', done => {
         var response = {
             "type": "push",
             "user": {
@@ -156,7 +156,7 @@ describe('hooks', function () {
             "compare": "https://bitbucket.org/marcus/project-x/"
         };
 
-        githook.on('push', function (eventdata) {
+        githook.on('push', eventdata => {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
@@ -171,12 +171,12 @@ describe('hooks', function () {
             .post('/bitbucket')
             .send(json)
             .expect(200)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
             });
     });
 
-    it('github push', function (done) {
+    it('github push', done => {
         var response = {
             "type": "push",
             "user": {
@@ -222,7 +222,7 @@ describe('hooks', function () {
             "compare": "https://github.com/octokitty/testing/compare/17c497ccc7cc...1481a2de7b2a"
         };
 
-        githook.on('push', function (eventdata) {
+        githook.on('push', eventdata => {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
@@ -239,17 +239,17 @@ describe('hooks', function () {
             .set('X-GitHub-Delivery', '12321')
             .send(json)
             .expect(200)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
             });
     });
 
-    it('github issues', function (done) {
+    it('github issues', done => {
         var response = {
             'type': 'issues'
         };
 
-        githook.on('issues', function (eventdata) {
+        githook.on('issues', eventdata => {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
@@ -266,12 +266,12 @@ describe('hooks', function () {
             .set('X-GitHub-Delivery', '12321')
             .send(json)
             .expect(200)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
             });
     });
 
-    it('github pull_request', function (done) {
+    it('github pull_request', done => {
         var response = {
             "type": "pull_request",
             "user": {
@@ -295,7 +295,7 @@ describe('hooks', function () {
             "html_url": "https://github.com/octocat/Hello-World/pull/1"
         };
 
-        githook.on('pull_request', function (eventdata) {
+        githook.on('pull_request', eventdata => {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
@@ -313,17 +313,17 @@ describe('hooks', function () {
             .set('X-GitHub-Delivery', '12321')
             .send(json)
             .expect(200)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
             });
     });
 
-    it('github issue comment', function (done) {
+    it('github issue comment', done => {
         var response = {
             'type': 'issue_comment'
         };
 
-        githook.on('issue_comment', function (eventdata) {
+        githook.on('issue_comment', eventdata => {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
@@ -340,17 +340,17 @@ describe('hooks', function () {
             .set('X-GitHub-Delivery', '12321')
             .send(json)
             .expect(200)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
             });
     });
 
-    it('github fork', function (done) {
+    it('github fork', done => {
         var response = {
             'type': 'fork'
         };
 
-        githook.on('fork', function (eventdata) {
+        githook.on('fork', eventdata => {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
@@ -367,18 +367,18 @@ describe('hooks', function () {
             .set('X-GitHub-Delivery', '12321')
             .send(json)
             .expect(200)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
             });
     });
 
-    it('github ping', function (done) {
+    it('github ping', done => {
         var response = {
             'type': 'ping',
             'zen': 'Responsive is better than fast.'
         };
 
-        githook.on('ping', function (eventdata) {
+        githook.on('ping', eventdata => {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
@@ -395,12 +395,12 @@ describe('hooks', function () {
             .set('X-GitHub-Delivery', '12321')
             .send(json)
             .expect(200)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
             });
     });
 
-    it('gitlab 6', function (done) {
+    it('gitlab 6', done => {
         var response = {
             "type": "push",
             "user": {
@@ -435,7 +435,7 @@ describe('hooks', function () {
             "compare": "http://localhost/diaspora/compare/95790bf891e76fee5e1747ab589903a6a1f80f22...da1560886d4f094c3e6c9ef40349f7d38b5d27d7"
         };
 
-        githook.on('push', function (eventdata) {
+        githook.on('push', eventdata => {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
@@ -450,7 +450,7 @@ describe('hooks', function () {
             .post('/gitlab')
             .send(json)
             .expect(200)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
             });
     });

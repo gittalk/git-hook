@@ -1,11 +1,11 @@
 'use strict';
 
-var util = require('util'),
-    debug = require('debug')('githook'),
-    EventEmitter = require('events').EventEmitter,
-    Github = require('./services/github'),
-    Bitbucket = require('./services/bitbucket'),
-    Gitlab = require('./services/gitlab');
+var util = require('util');
+var debug = require('debug')('githook');
+var EventEmitter = require('events').EventEmitter;
+var Github = require('./services/github');
+var Bitbucket = require('./services/bitbucket');
+var Gitlab = require('./services/gitlab');
 
 /**
  * With Githook we react on github, bitbucket and gitlab hooks and submit
@@ -44,15 +44,15 @@ util.inherits(Githook, EventEmitter);
 Githook.prototype.handleEvent = function (service, data, callback) {
     debug('handle ' + service);
     var self = this;
-    this.services[service].verify(data).then(function () {
+    this.services[service].verify(data).then(() => {
         debug('request is verified');
         return self.services[service].extract(data.headers, data.body);
     })
-    .then(function (json) {
+    .then(json => {
         self.sendevent(json);
         callback();
     }).
-    catch (function (err) {
+    catch (err => {
         if (err) {
             console.log(err);
         }
@@ -64,7 +64,7 @@ Githook.prototype.handleEvent = function (service, data, callback) {
 /**
  * determine the ip adress of the http requestor
  */
-Githook.prototype.determineIP = function (req) {
+Githook.prototype.determineIP = req => {
     // it does not use req.headers['x-forwarded-for']
     // because this can be malipulated
     var ip = req.connection.remoteAddress ||

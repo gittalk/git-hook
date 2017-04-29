@@ -1,16 +1,15 @@
 'use strict';
 
-var request = require('supertest'),
-    fs = require('fs'),
-    should = require('should'),
-    assert = require('assert'),
-    path = require('path'),
-    express = require('express'),
-    bodyParser = require('body-parser'),
-    Githook = require('../index.js');
-
-var secret = 'MYSECRET',
-    ghSignature = require('../middleware/ghsignature');
+var request = require('supertest');
+var fs = require('fs');
+var should = require('should');
+var assert = require('assert');
+var path = require('path');
+var express = require('express');
+var bodyParser = require('body-parser');
+var Githook = require('../index.js');
+var secret = 'MYSECRET';
+var ghSignature = require('../middleware/ghsignature');
 
 var response = {
     "type": "push",
@@ -57,7 +56,7 @@ var response = {
     "compare": "https://github.com/octokitty/testing/compare/17c497ccc7cc...1481a2de7b2a"
 };
 
-describe('github signed hooks', function () {
+describe('github signed hooks', () => {
     var app;
     var githook;
 
@@ -66,27 +65,27 @@ describe('github signed hooks', function () {
         app = express();
         githook = new Githook({
             github: {
-                secret: secret,
+                secret,
                 // token : 'yourgithubtoken'
             }
         });
 
         app.use(bodyParser.json({
             limit: '1mb',
-            hook: function (req, raw) {
+            hook(req, raw) {
                 req._ghsignature = ghSignature.calculateSignature(secret, raw);
             }
         }));
 
         app.post('/github', [ghSignature.verify({
-                secret: secret
+                secret
             }),
-            function (req, res) {
+            (req, res) => {
                 githook.handleEvent('github', {
                     ip: '192.30.252.1',
                     headers: req.headers,
                     body: req.body
-                }, function (err) {
+                }, err => {
                     if (err) {
                         res.send(400, 'Event not supported');
                     } else {
@@ -96,11 +95,11 @@ describe('github signed hooks', function () {
             }
         ]);
 
-        app.post('/gitlab', function (req, res) {
+        app.post('/gitlab', (req, res) => {
             githook.handleEvent('gitlab', {
                 headers: req.headers,
                 body: req.body
-            }, function (err) {
+            }, err => {
                 if (err) {
                     res.send(400, 'Event not supported');
                 } else {
@@ -109,11 +108,11 @@ describe('github signed hooks', function () {
             });
         });
 
-        app.post('/bitbucket', function (req, res) {
+        app.post('/bitbucket', (req, res) => {
             githook.handleEvent('bitbucket', {
                 headers: req.headers,
                 body: req.body
-            }, function (err) {
+            }, err => {
                 if (err) {
                     res.send(400, 'Event not supported');
                 } else {
@@ -123,7 +122,7 @@ describe('github signed hooks', function () {
         });
 
         // error handler
-        app.use(function (err, req, res, next) {
+        app.use((err, req, res, next) => {
             res.status(400);
             res.send({
                 error: 'Bad Request'
@@ -133,19 +132,19 @@ describe('github signed hooks', function () {
         return app;
     }
 
-    beforeEach(function (done) {
+    beforeEach(done => {
         app = startServer();
         setTimeout(done, 1000);
     });
 
-    afterEach(function (done) {
+    afterEach(done => {
         // nothing to do yet
         done();
     });
 
-    it('request with signature', function (done) {
+    it('request with signature', done => {
 
-        githook.on('push', function (eventdata) {
+        githook.on('push', eventdata => {
             delete eventdata.raw;
             // this is not a secure test, because JSON does not garantie a specific order
             // anyway it works for our tests 
@@ -163,12 +162,12 @@ describe('github signed hooks', function () {
             .set('X-Hub-Signature', ghSignature.calculateSignature(secret, JSON.stringify(json)))
             .send(json)
             .expect(200)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
             });
     });
 
-    it('request with changed body', function (done) {
+    it('request with changed body', done => {
 
         var data = fs.readFileSync(path.resolve(__dirname, './hooks/github_push.json'));
         var json = JSON.parse(data);
@@ -184,13 +183,13 @@ describe('github signed hooks', function () {
             .set('X-Hub-Signature', signature)
             .send(changedjson)
             .expect(400)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
                 done();
             });
     });
 
-    it('request without signature', function (done) {
+    it('request without signature', done => {
 
         var data = fs.readFileSync(path.resolve(__dirname, './hooks/github_push.json'));
         var json = JSON.parse(data);
@@ -200,7 +199,7 @@ describe('github signed hooks', function () {
             .set('X-GitHub-Delivery', '12321')
             .send(json)
             .expect(400)
-            .end(function (err, res) {
+            .end((err, res) => {
                 should.not.exist(err);
                 done();
             });

@@ -1,6 +1,6 @@
 'use strict';
 
-module.exports = function(grunt) {
+module.exports = grunt => {
 
     // load the plugins.
     grunt.loadNpmTasks('grunt-contrib-jshint');
